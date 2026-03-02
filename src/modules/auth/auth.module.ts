@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailModule, jwtConfigFactory } from '@vritti/api-sdk';
@@ -18,7 +18,7 @@ import { SessionService } from './root/services/session.service';
       useFactory: jwtConfigFactory,
     }),
     EmailModule,
-    UserModule,
+    forwardRef(() => UserModule),
     VerificationModule,
   ],
   controllers: [AuthController, ForgotPasswordController],

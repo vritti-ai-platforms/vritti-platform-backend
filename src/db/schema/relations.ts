@@ -6,6 +6,10 @@ export const relations = defineRelations(schema, (r) => ({
   users: {
     sessions: r.many.sessions(),
     verifications: r.many.verifications(),
+    organization: r.one.organizations({
+      from: r.users.organizationId,
+      to: r.organizations.id,
+    }),
   },
 
   // Session relations
@@ -25,5 +29,7 @@ export const relations = defineRelations(schema, (r) => ({
   },
 
   // Organization relations
-  organizations: {},
+  organizations: {
+    users: r.many.users(),
+  },
 }));

@@ -122,7 +122,6 @@ export class AuthService {
         expiresIn,
         user: user ? {
           id: user.id,
-          externalId: user.externalId ?? null,
           email: user.email,
           fullName: user.fullName,
           role: user.role,

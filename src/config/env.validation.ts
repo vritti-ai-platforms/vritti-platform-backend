@@ -119,6 +119,10 @@ class EnvironmentVariables {
   @IsString()
   NEXUS_WEBHOOK_SECRET: string;
 
+  // Domains
+  @IsString()
+  BASE_DOMAIN: string;
+
   // Email / Brevo
   @IsString()
   @IsOptional()

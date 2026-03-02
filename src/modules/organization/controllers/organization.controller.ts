@@ -4,7 +4,7 @@ import { Public, SkipCsrf } from '@vritti/api-sdk';
 import { ApiCreateOrganizationWebhook } from '../docs/organization.docs';
 import { OrganizationDto } from '../dto/entity/organization.dto';
 import { CreateOrganizationWebhookDto } from '../dto/request/create-organization-webhook.dto';
-import { WebhookSecretGuard } from '../guards/webhook-secret.guard';
+import { WebhookSecretGuard } from '../../../common/guards/webhook-secret.guard';
 import { OrganizationService } from '../services/organization.service';
 
 @ApiTags('Organizations')

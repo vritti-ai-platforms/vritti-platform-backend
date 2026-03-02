@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class AuthUserDto {
   @ApiProperty() id: string;
-  @ApiPropertyOptional() externalId: string | null;
   @ApiProperty() email: string;
   @ApiProperty() fullName: string;
   @ApiProperty() role: string;

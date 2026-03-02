@@ -1,12 +1,12 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import type { User } from '@/db/schema';
 
 export class UserDto {
   @ApiProperty({ description: 'User unique identifier', example: 'a1b2c3d4-...' })
   id: string;
 
-  @ApiPropertyOptional({ description: 'External user ID from cloud-server', example: 'usr_abc123' })
-  externalId: string | null;
+  @ApiProperty({ description: 'Organisation this user belongs to', example: 'uuid-here' })
+  organizationId: string;
 
   @ApiProperty({ description: 'User email address', example: 'user@example.com' })
   email: string;
@@ -30,7 +30,7 @@ export class UserDto {
   static from(user: User): UserDto {
     const dto = new UserDto();
     dto.id = user.id;
-    dto.externalId = user.externalId ?? null;
+    dto.organizationId = user.organizationId;
     dto.email = user.email;
     dto.fullName = user.fullName;
     dto.role = user.role;

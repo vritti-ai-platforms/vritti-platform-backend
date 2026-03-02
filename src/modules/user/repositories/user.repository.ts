@@ -15,24 +15,17 @@ export class UserRepository extends PrimaryBaseRepository<typeof users> {
     });
   }
 
-  // Finds a user by their external ID from cloud-server
-  async findByExternalId(externalId: string): Promise<User | undefined> {
-    return this.model.findFirst({
-      where: { externalId },
-    });
-  }
-
-  // Upserts a user by externalId, creating or updating on conflict
-  async upsertByExternalId(data: NewUser): Promise<User> {
+  // Creates or updates a portal user by email (idempotent)
+  async upsertByEmail(data: NewUser): Promise<User> {
     const results = await this.db
       .insert(users)
       .values(data)
       .onConflictDoUpdate({
-        target: users.externalId,
+        target: users.email,
         set: {
-          email: data.email,
           fullName: data.fullName,
           role: data.role,
+          organizationId: data.organizationId,
           updatedAt: new Date(),
         },
       })
@@ -48,5 +41,12 @@ export class UserRepository extends PrimaryBaseRepository<typeof users> {
   // Sets the password hash for a user and marks status as ACTIVE
   async setPassword(id: string, passwordHash: string): Promise<User> {
     return this.update(id, { passwordHash, status: 'ACTIVE', updatedAt: new Date() });
+  }
+
+  // Finds all users belonging to an organisation
+  async findByOrganizationId(organizationId: string): Promise<User[]> {
+    return this.model.findMany({
+      where: { organizationId },
+    });
   }
 }

@@ -434,6 +434,93 @@
         "tags": [
           "Users"
         ]
+      },
+      "get": {
+        "description": "Returns all users for the given organisation. Protected by webhook secret.",
+        "operationId": "UserController_getUsersByOrg",
+        "parameters": [
+          {
+            "name": "orgId",
+            "required": true,
+            "in": "query",
+            "description": "Organisation ID",
+            "schema": {
+              "example": "uuid-here",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or missing webhook secret."
+          }
+        },
+        "summary": "Get portal users by org",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/webhook/{id}": {
+      "patch": {
+        "description": "Updates a portal user role, status or name. Protected by webhook secret.",
+        "operationId": "UserController_updateFromWebhook",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserWebhookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or missing webhook secret."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        },
+        "summary": "Update portal user",
+        "tags": [
+          "Users"
+        ]
       }
     },
     "/organizations/webhook": {
@@ -512,7 +599,7 @@
   ],
   "servers": [
     {
-      "url": "https://local.vrittiai.com:3001",
+      "url": "http://local.vrittiai.com:3001",
       "description": "Local Development"
     }
   ],
@@ -552,9 +639,6 @@
         "properties": {
           "id": {
             "type": "string"
-          },
-          "externalId": {
-            "type": "object"
           },
           "email": {
             "type": "string"
@@ -741,10 +825,10 @@
       "CreateUserWebhookDto": {
         "type": "object",
         "properties": {
-          "externalId": {
+          "orgId": {
             "type": "string",
-            "description": "External user ID from cloud-server",
-            "example": "usr_abc123"
+            "description": "Nexus organisation ID",
+            "example": "uuid-here"
           },
           "email": {
             "type": "string",
@@ -768,7 +852,7 @@
           }
         },
         "required": [
-          "externalId",
+          "orgId",
           "email",
           "fullName"
         ]
@@ -781,10 +865,10 @@
             "description": "User unique identifier",
             "example": "a1b2c3d4-..."
           },
-          "externalId": {
-            "type": "object",
-            "description": "External user ID from cloud-server",
-            "example": "usr_abc123"
+          "organizationId": {
+            "type": "string",
+            "description": "Organisation this user belongs to",
+            "example": "uuid-here"
           },
           "email": {
             "type": "string",
@@ -829,6 +913,7 @@
         },
         "required": [
           "id",
+          "organizationId",
           "email",
           "fullName",
           "role",
@@ -836,6 +921,31 @@
           "hasPassword",
           "createdAt"
         ]
+      },
+      "UpdateUserWebhookDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "example": "Jane Smith"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "SUPER_ADMIN",
+              "ADMIN",
+              "SUPPORT"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "SUSPENDED"
+            ]
+          }
+        }
       },
       "CreateOrganizationWebhookDto": {
         "type": "object",
